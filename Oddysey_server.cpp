@@ -9,7 +9,8 @@
 /* Pasos para la ejecucion del servidor:
  * 1. Abrir una terminal
  * 2. Cambiar el directorio con: cd C-
- * 3. Escribir el comando: g++  -pthread  base64.cpp Chunk.cpp pugixml.cpp -std=c++11  Oddysey_server.cpp -o server
+ * 3. Escribir el comando: g++  -pthread    base64.cpp Chunk.cpp pugixml.cpp -std=c++11 DataBase/Query.cpp DataBase/Metadata.cpp  DataBase/Userdata.cpp Oddysey_server.cpp -o server
+
 
 
 a-ljsoncpp -std=c++11
@@ -19,7 +20,8 @@ a-ljsoncpp -std=c++11
 void *manejador_conexion(void *);
 
 class Base64;
-Query* consulta= new Query();
+Query consulta;
+string  ruta= "/home/kimberlyc/CLionProjects/OddyseyServer1-/mp3/ejemplo.mp3";
 List<string> Chunks();
 long tam();
 pugi::xml_document XML(int codigo);
@@ -105,12 +107,12 @@ void *manejador_conexion(void *socket_desc) {
         client_message[read_size] = '\0';
 
         //Mensaje recibido por el cliente
-        cout << "Recibido " << client_message << endl;
+        //cout << "Recibido " << client_message << endl;
 
         pugi::xml_document doc2;
         pugi::xml_parse_result result = doc2.load_string(client_message);
 
-        cout << "Estado" << result.description();
+        //cout << "Estado" << result.description();
 
         pugi::xml_node nodo= doc2.child("comunicacion");
 
@@ -126,6 +128,7 @@ void *manejador_conexion(void *socket_desc) {
         cout << "El XML de respuesta es: \n" << s.str() << std::endl;
 
         if (codigo == 0) {
+            List<Metadata> lista =  consulta.getTrackByName(nodo.child("nombre").text().get());
             pugi::xml_document doc;
             doc = XML(chunk);
 
@@ -152,17 +155,117 @@ void *manejador_conexion(void *socket_desc) {
             //ListaAmigos = dividir(amigos);
             //ListaChunks= dividir(chunks);
 
-            consulta->addNewUser(user);
+            consulta.addNewUser(user);
+
         }else if(codigo==2){
+            pugi::xml_document doc3;
             string usuario = nodo.child("usuario").text().get();
-            if(consulta->Buscar(usuario)){
+            string pass = nodo.child("contrasena").text().get();
+
+            if(consulta.checkCredentials(usuario, pass)){
+                pugi::xml_node x = doc3.append_child("comunicacion");
+                pugi::xml_node val = x.append_child("usuario");
+                val.append_child(pugi::node_pcdata).set_value("true");
+
+            }else{
+                pugi::xml_node x = doc3.append_child("comunicacion");
+                pugi::xml_node val = x.append_child("usuario");
+                val.append_child(pugi::node_pcdata).set_value("false");
+            }
+
+            std::stringstream ss;
+            doc3.save(ss, "");
+            string x = ss.str();
+            send(sock, x.c_str(), x.size(), 0);
+
+
+        }else if(codigo==3){
+            Metadata meta;
+            meta.setAlbum(nodo.child("album").text().get());
+            meta.setArtist(nodo.child("artista").text().get());
+            meta.setSongName(nodo.child("nombre").text().get());
+            meta.setYear(nodo.child("path").text().get());
+
+            pugi::xml_document doc;
+            pugi::xml_node x = doc.append_child("comunicacion");
+            pugi::xml_node val = x.append_child("Guardado");
+            val.append_child(pugi::node_pcdata).set_value("true");
+
+            std::stringstream s;
+            doc.save(s, "");
+            string y = s.str();
+            send(sock, y.c_str(), y.size(), 0);
+
+           /* FILE *fichero, *fichDest;
+            if ((fichero = fopen(nodo.child("path").text().get(), "rb")) == NULL) {
+                printf("No existe el fichero\n");
+                exit(1);
 
             }
 
+            if ((fichDest = fopen( nodo.child("nombre").text().as_string(), "wb")) == NULL) {
+                printf("No se ha podido crear el fichero destino!\n");
+                exit(2);
+            }
+            /* Se clacula la longitud del archivo
+            fseek(fichero, 0, SEEK_END);
+            long longitud = ftell(fichero);
+            fseek(fichero, 0, SEEK_SET);
+
+                unsigned char buffer[longitud]; //buffer para chunks
+
+                int cantidad = fread(buffer, 1, longitud, fichero);
+
+                fwrite(buffer, 1, cantidad, fichDest); */
+
+
+
+            consulta.addNewTrack(meta);
+            }else if(codigo==4){
+
+            List<Metadata> lista=  consulta.getAllTracks();
+            pugi::xml_document doc;
+            pugi::xml_node x = doc.append_child("comunicacion");
+
+
+            for(int i=0; i< lista.length(); i++){
+
+                Metadata cancion= lista.Get(i);
+                pugi::xml_node val2 = x.append_child("nombre");
+                val2.append_child(pugi::node_pcdata).set_value(cancion.getSongName().c_str());
+                pugi::xml_node val = x.append_child("artista");
+                val.append_child(pugi::node_pcdata).set_value(cancion.getArtist().c_str());
+                pugi::xml_node val3 = x.append_child("album");
+                val3.append_child(pugi::node_pcdata).set_value(cancion.getAlbum().c_str());
+
+
+
+            }
+            std::stringstream s;
+            doc.save(s, "");
+            string y = s.str();
+            send(sock, y.c_str(), y.size(), 0);
+            cout << "Le voy a enviar"<< y;
+
+        }else if(codigo==5){
+            string nombreCancion = nodo.child("nombre").text().get();
+            List<Metadata> lista= consulta.getTrackByName(nombreCancion);
+            Metadata meta= lista.Get(0);
+            ruta =meta.getYear().c_str();
 
 
         } else {
-            send(sock, "Instrucción invalida", 20, 0);
+
+            pugi::xml_document doc;
+            pugi::xml_node x = doc.append_child("comunicacion");
+            pugi::xml_node val = x.append_child("Invalido");
+            val.append_child(pugi::node_pcdata).set_value("NO");
+
+            std::stringstream s;
+            doc.save(s, "");
+            string y = s.str();
+            send(sock, y.c_str(), y.size(), 0);
+
 
         }
     }
@@ -195,8 +298,8 @@ void *manejador_conexion(void *socket_desc) {
 
 
         //Acceder a el fichero de origen
-        char nombreOrg[] = "/home/cris/CLionProjects/P2_repositorio-master/mp3/ejemplo.mp3";
-        if ((fichero = fopen(nombreOrg, "rb")) == NULL) {
+
+        if ((fichero = fopen(ruta.c_str(), "rb")) == NULL) {
             printf("No existe el fichero\n");
             exit(1);
 
@@ -275,8 +378,7 @@ void *manejador_conexion(void *socket_desc) {
 
 
             pugi::xml_node node = doc.append_child("comunicacion");
-            pugi::xml_node descr0 = node.append_child("codigo");
-            descr0.append_child(pugi::node_pcdata).set_value("00");
+
 
             std::string ss = std::to_string(chunk); //Aqui va el numero de chunk pedido
             char const *num = ss.c_str();

@@ -5,9 +5,11 @@
 #include <iostream>
 #include "Query.h"
 
+
+const char* ruta= "/home/kimberlyc/CLionProjects/OddyseyServer1-/DataBase/database.json";
 void Query::readFile(std::string path) {
     std::cout << "1" << std::endl;
-    FILE* fp = fopen("../DataBase/database.json", "r"); // non-Windows use "r"
+    FILE* fp = fopen(ruta, "r"); // non-Windows use "r"
     std::cout << "2" << std::endl;
     char readBuffer[65536];
     FileReadStream is(fp, readBuffer, sizeof(readBuffer));
@@ -18,7 +20,7 @@ void Query::readFile(std::string path) {
     fclose(fp);
     std::cout << "just read" << std::endl;
 
-    FILE* fp2 = fopen("../DataBase/output.json", "w"); // non-Windows use "w"
+    FILE* fp2 = fopen(ruta, "w"); // non-Windows use "w"
     char writeBuffer[65536];
     FileWriteStream os(fp2, writeBuffer, sizeof(writeBuffer));
     Writer<FileWriteStream> writer(os);
@@ -28,7 +30,7 @@ void Query::readFile(std::string path) {
 }
 
 void Query::findValue(std::string) {
-    FILE* fp = fopen("../DataBase/database.json", "r"); // non-Windows use "r"
+    FILE* fp = fopen(ruta, "r"); // non-Windows use "r"
     char readBuffer[65536];
     FileReadStream is(fp, readBuffer, sizeof(readBuffer));
     Document d;
@@ -37,14 +39,21 @@ void Query::findValue(std::string) {
     std::string dd = d["tracks"][0]["name"].GetString();
 }
 
-bool Query::Buscar(std::string) {
-    FILE* fp = fopen("../DataBase/database.json", "r"); // non-Windows use "r"
+bool Query::Buscar(std::string user) {
+    FILE* fp = fopen(ruta, "r"); // non-Windows use "r"
     char readBuffer[65536];
     FileReadStream is(fp, readBuffer, sizeof(readBuffer));
     Document d;
     d.ParseStream(is);
     fclose(fp);
-    if(d["tracks"][0]["name"].GetString() != NULL){
+    for(int x = 0; x < d["users"].GetArray().Size(); x++){
+        /*if(d["users"][x]["name"].GetString() == user){
+
+        }*/
+        std::cout<<d["users"][x]["name"].GetString()<<std::endl;
+    }
+
+    if(d["users"][0]["name"].GetString() != NULL){
         return false;
     }else{
         return true;
@@ -54,7 +63,7 @@ bool Query::Buscar(std::string) {
 
 
 bool Query::checkCredentials(std::string user, std::string password) {
-    FILE* fp = fopen("../DataBase/database.json", "r"); // non-Windows use "r"
+    FILE* fp = fopen(ruta, "r"); // non-Windows use "r"
     char readBuffer[65536];
     FileReadStream is(fp, readBuffer, sizeof(readBuffer));
     Document d;
@@ -70,18 +79,20 @@ bool Query::checkCredentials(std::string user, std::string password) {
     return false;
 }
 
-SimpleLinkedList<Metadata> Query::getAllTracks(){
-    FILE* fp = fopen("../DataBase/database.json", "r"); // non-Windows use "r"
+List<Metadata> Query::getAllTracks(){
+
+    FILE* fp = fopen(ruta, "r"); // non-Windows use "r"
     char readBuffer[65536];
     FileReadStream is(fp, readBuffer, sizeof(readBuffer));
     Document d;
     d.ParseStream(is);
-    fclose(fp);
+
     int numberOfTracks = d["tracks"].Size();
 
-    SimpleLinkedList<Metadata> tracksList;
+    List<Metadata> tracksList;
 
     for (int h = 0; h < numberOfTracks; h++) {
+
 
         Metadata trackData;
         if(d["tracks"][h].HasMember("name")){
@@ -103,14 +114,15 @@ SimpleLinkedList<Metadata> Query::getAllTracks(){
             trackData.setYear(d["tracks"][h]["year"].GetString());
         }
 
-        tracksList.insertRear(trackData);
+        tracksList.Insert(trackData);
+
     }
 
     return tracksList;
 }
 
-SimpleLinkedList<Metadata> Query::getTrackByArtist(std::string artist){
-    FILE* fp = fopen("../DataBase/database.json", "r"); // non-Windows use "r"
+List<Metadata> Query::getTrackByArtist(std::string artist){
+    FILE* fp = fopen(ruta, "r"); // non-Windows use "r"
     char readBuffer[65536];
     FileReadStream is(fp, readBuffer, sizeof(readBuffer));
     Document d;
@@ -118,7 +130,7 @@ SimpleLinkedList<Metadata> Query::getTrackByArtist(std::string artist){
     fclose(fp);
     int numberOfTracks = d["tracks"].Size();
 
-    SimpleLinkedList<Metadata> tracksList;
+   List<Metadata> tracksList;
 
     for (int h = 0; h < numberOfTracks; h++) {
 
@@ -143,14 +155,15 @@ SimpleLinkedList<Metadata> Query::getTrackByArtist(std::string artist){
                 trackData.setYear(d["tracks"][h]["year"].GetString());
             }
 
-            tracksList.insertRear(trackData);
+            tracksList.Insert (trackData);
         }
     }
-
+    fclose(fp);
     return tracksList;
+
 }
-SimpleLinkedList<Metadata> Query::getTrackByName(std::string name){
-    FILE* fp = fopen("../DataBase/database.json", "r"); // non-Windows use "r"
+List<Metadata> Query::getTrackByName(std::string name){
+    FILE* fp = fopen("/home/kimberlyc/CLionProjects/OddyseyServer1-/DataBase/database.json", "r"); // non-Windows use "r"
     char readBuffer[65536];
     FileReadStream is(fp, readBuffer, sizeof(readBuffer));
     Document d;
@@ -158,7 +171,7 @@ SimpleLinkedList<Metadata> Query::getTrackByName(std::string name){
     fclose(fp);
     int numberOfTracks = d["tracks"].Size();
 
-    SimpleLinkedList<Metadata> tracksList;
+    List<Metadata> tracksList;
 
     for (int h = 0; h < numberOfTracks; h++) {
 
@@ -183,15 +196,15 @@ SimpleLinkedList<Metadata> Query::getTrackByName(std::string name){
                 trackData.setYear(d["tracks"][h]["year"].GetString());
             }
 
-            tracksList.insertRear(trackData);
+            tracksList.Insert(trackData);
         }
     }
 
     return tracksList;
 }
 
-SimpleLinkedList<Userdata> Query::getUsers(){
-    FILE* fp = fopen("../DataBase/database.json", "r"); // non-Windows use "r"
+List<Userdata> Query::getUsers(){
+    FILE* fp = fopen("/home/kimberlyc/CLionProjects/OddyseyServer1-/DataBase/database.json", "r"); // non-Windows use "r"
     char readBuffer[65536];
     FileReadStream is(fp, readBuffer, sizeof(readBuffer));
     Document d;
@@ -199,7 +212,7 @@ SimpleLinkedList<Userdata> Query::getUsers(){
     fclose(fp);
     int totalUsers = d["users"].Size();
 
-    SimpleLinkedList<Userdata> users;
+    List<Userdata> users;
 
     for (int h = 0; h < totalUsers; h++) {
 
@@ -226,14 +239,14 @@ SimpleLinkedList<Userdata> Query::getUsers(){
                 userdata.setPreferences(preferences);
             }
 
-            users.insertRear(userdata);
+            users.Insert(userdata);
 
     }
 
     return users;
 }
-SimpleLinkedList<std::string> Query::getUserFriends(std::string username) {
-    FILE *fp = fopen("../DataBase/database.json", "r"); // non-Windows use "r"
+List<std::string> Query::getUserFriends(std::string username) {
+    FILE *fp = fopen(ruta, "r"); // non-Windows use "r"
     char readBuffer[65536];
     FileReadStream is(fp, readBuffer, sizeof(readBuffer));
     Document d;
@@ -241,13 +254,13 @@ SimpleLinkedList<std::string> Query::getUserFriends(std::string username) {
     fclose(fp);
 
     int totalUsers = d["users"].Size();
-    SimpleLinkedList<std::string> friends;
+    List<std::string> friends;
     for (int h = 0; h < totalUsers; h++) {
 
         if (d["users"][h].HasMember("friends") && d["users"][h]["username"].GetString() == username) {
 
             for (int y = 0; y < d["users"][h]["friends"].Size(); y++) {
-                friends.insertRear(d["users"][h]["friends"][y].GetString());
+                friends.Insert(d["users"][h]["friends"][y].GetString());
             }
             return friends;
         } else {
@@ -255,14 +268,14 @@ SimpleLinkedList<std::string> Query::getUserFriends(std::string username) {
         }
     }
 }
-SimpleLinkedList<std::string> Query::getUserPreferences(std::string username){
-    FILE *fp = fopen("../DataBase/database.json", "r"); // non-Windows use "r"
+List<std::string> Query::getUserPreferences(std::string username){
+    FILE *fp = fopen("/home/kimberlyc/CLionProjects/OddyseyServer1-/DataBase/database.json", "r"); // non-Windows use "r"
     char readBuffer[65536];
     FileReadStream is(fp, readBuffer, sizeof(readBuffer));
     Document d;
     d.ParseStream(is);
     fclose(fp);
-    SimpleLinkedList<std::string> preferences;
+    List<std::string> preferences;
     int totalUsers = d["users"].Size();
 
     for (int h = 0; h < totalUsers; h++) {
@@ -270,7 +283,7 @@ SimpleLinkedList<std::string> Query::getUserPreferences(std::string username){
         if (d["users"][h].HasMember("preferences") && d["users"][h]["username"].GetString() == username) {
 
             for (int y = 0; y < d["users"][h]["preferences"].Size(); y++) {
-                preferences.insertRear(d["users"][h]["preferences"][y].GetString());
+                preferences.Insert(d["users"][h]["preferences"][y].GetString());
             }
             return preferences;
         } else {
@@ -281,7 +294,7 @@ SimpleLinkedList<std::string> Query::getUserPreferences(std::string username){
 }
 
 void Query::addNewTrack(Metadata metadata) {
-    FILE *fp = fopen("../DataBase/database.json", "r"); // non-Windows use "r"
+    FILE *fp = fopen("/home/kimberlyc/CLionProjects/OddyseyServer1-/DataBase/database.json", "r"); // non-Windows use "r"
     char readBuffer[65536];
     FileReadStream is(fp, readBuffer, sizeof(readBuffer));
     Document d;
@@ -323,7 +336,7 @@ void Query::addNewTrack(Metadata metadata) {
     d["tracks"].PushBack(object, allocator);
 
 
-    FILE* fp2 = fopen("../DataBase/database.json", "w"); // non-Windows use "w"
+    FILE* fp2 = fopen(ruta, "w"); // non-Windows use "w"
     char writeBuffer[65536];
     FileWriteStream os(fp2, writeBuffer, sizeof(writeBuffer));
     Writer<FileWriteStream> writer(os);
@@ -332,7 +345,7 @@ void Query::addNewTrack(Metadata metadata) {
 }
 
 void Query::addNewUser(Userdata userdata) {
-    FILE *fp = fopen("../DataBase/database.json", "r"); // non-Windows use "r"
+    FILE *fp = fopen("/home/kimberlyc/CLionProjects/OddyseyServer1-/DataBase/database.json", "r"); // non-Windows use "r"
     char readBuffer[65536];
     FileReadStream is(fp, readBuffer, sizeof(readBuffer));
     Document d;
@@ -384,7 +397,7 @@ void Query::addNewUser(Userdata userdata) {
         d["users"].PushBack(object, allocator);
 
 
-    FILE* fp2 = fopen("../DataBase/database.json", "w"); // non-Windows use "w"
+    FILE* fp2 = fopen("/home/kimberlyc/CLionProjects/OddyseyServer1-/DataBase/database.json", "w"); // non-Windows use "w"
     char writeBuffer[65536];
     FileWriteStream os(fp2, writeBuffer, sizeof(writeBuffer));
     Writer<FileWriteStream> writer(os);

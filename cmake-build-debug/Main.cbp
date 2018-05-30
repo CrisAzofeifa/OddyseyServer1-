@@ -108,6 +108,12 @@
 		<Unit filename="/home/kimberlyc/CLionProjects/OddyseyServer1-/DataBase/Userdata.h">
 			<Option target="Main"/>
 		</Unit>
+		<Unit filename="/home/kimberlyc/CLionProjects/OddyseyServer1-/List.h">
+			<Option target="Main"/>
+		</Unit>
+		<Unit filename="/home/kimberlyc/CLionProjects/OddyseyServer1-/ListNode.h">
+			<Option target="Main"/>
+		</Unit>
 		<Unit filename="/home/kimberlyc/CLionProjects/OddyseyServer1-/Oddysey_server.cpp">
 			<Option target="Main"/>
 		</Unit>

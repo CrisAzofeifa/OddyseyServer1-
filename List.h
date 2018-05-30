@@ -1,5 +1,5 @@
 //Recuperado de http://mygnet.net/codigos/cplusplus/apis/lista_dinamica_generica_utilizando_templates.766
-
+#pragma once
 #if !defined Nodo_h
 #define Nodo_h
 #include <iostream>

@@ -4,15 +4,15 @@
 
 #ifndef SERVERDATABASE_QUERY_H
 #define SERVERDATABASE_QUERY_H
-
+#pragma once
 #include "../rapidjson/document.h"
 #include "../rapidjson/filereadstream.h"
 #include <cstdio>
 #include "../rapidjson/filewritestream.h"
 #include "../rapidjson/writer.h"
-#include "../DataStructures/SimpleLinkedList.h"
 #include "Metadata.h"
 #include "Userdata.h"
+#include "../List.h"
 
 using namespace rapidjson;
 
@@ -22,12 +22,12 @@ public:
     void findValue(std::string);
     bool Buscar(std::string);
     bool checkCredentials(std::string user, std::string password);
-    SimpleLinkedList<Metadata> getAllTracks();
-    SimpleLinkedList<Metadata> getTrackByArtist(std::string artist);
-    SimpleLinkedList<Metadata> getTrackByName(std::string name);
-    SimpleLinkedList<Userdata> getUsers();
-    SimpleLinkedList<std::string> getUserFriends(std::string username);
-    SimpleLinkedList<std::string> getUserPreferences(std::string username);
+    List<Metadata> getAllTracks();
+    List<Metadata> getTrackByArtist(std::string artist);
+    List<Metadata>  getTrackByName(std::string name);
+    List<Userdata> getUsers();
+    List<std::string> getUserFriends(std::string username);
+    List<std::string> getUserPreferences(std::string username);
     void addNewUser(Userdata userdata);
     void addNewTrack(Metadata metadata);
 
