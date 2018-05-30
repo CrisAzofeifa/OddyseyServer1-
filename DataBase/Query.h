@@ -20,6 +20,7 @@ class Query {
 public:
     void readFile(std::string path);
     void findValue(std::string);
+    bool Buscar(std::string);
     bool checkCredentials(std::string user, std::string password);
     SimpleLinkedList<Metadata> getAllTracks();
     SimpleLinkedList<Metadata> getTrackByArtist(std::string artist);

@@ -37,6 +37,22 @@ void Query::findValue(std::string) {
     std::string dd = d["tracks"][0]["name"].GetString();
 }
 
+bool Query::Buscar(std::string) {
+    FILE* fp = fopen("../DataBase/database.json", "r"); // non-Windows use "r"
+    char readBuffer[65536];
+    FileReadStream is(fp, readBuffer, sizeof(readBuffer));
+    Document d;
+    d.ParseStream(is);
+    fclose(fp);
+    if(d["tracks"][0]["name"].GetString() != NULL){
+        return false;
+    }else{
+        return true;
+    }
+}
+
+
+
 bool Query::checkCredentials(std::string user, std::string password) {
     FILE* fp = fopen("../DataBase/database.json", "r"); // non-Windows use "r"
     char readBuffer[65536];

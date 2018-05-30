@@ -48,10 +48,10 @@ RM = /opt/clion-2017.3.3/bin/cmake/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/kimberlyc/CLionProjects/P2_repositorio-master
+CMAKE_SOURCE_DIR = /home/kimberlyc/CLionProjects/OddyseyServer1-
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/kimberlyc/CLionProjects/P2_repositorio-master/cmake-build-debug
+CMAKE_BINARY_DIR = /home/kimberlyc/CLionProjects/OddyseyServer1-/cmake-build-debug
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -80,9 +80,9 @@ edit_cache/fast: edit_cache
 
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/kimberlyc/CLionProjects/P2_repositorio-master/cmake-build-debug/CMakeFiles /home/kimberlyc/CLionProjects/P2_repositorio-master/cmake-build-debug/CMakeFiles/progress.marks
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/kimberlyc/CLionProjects/OddyseyServer1-/cmake-build-debug/CMakeFiles /home/kimberlyc/CLionProjects/OddyseyServer1-/cmake-build-debug/CMakeFiles/progress.marks
 	$(MAKE) -f CMakeFiles/Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/kimberlyc/CLionProjects/P2_repositorio-master/cmake-build-debug/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/kimberlyc/CLionProjects/OddyseyServer1-/cmake-build-debug/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
@@ -149,6 +149,87 @@ Chunk.s: Chunk.cpp.s
 Chunk.cpp.s:
 	$(MAKE) -f CMakeFiles/Main.dir/build.make CMakeFiles/Main.dir/Chunk.cpp.s
 .PHONY : Chunk.cpp.s
+
+DataBase/Metadata.o: DataBase/Metadata.cpp.o
+
+.PHONY : DataBase/Metadata.o
+
+# target to build an object file
+DataBase/Metadata.cpp.o:
+	$(MAKE) -f CMakeFiles/Main.dir/build.make CMakeFiles/Main.dir/DataBase/Metadata.cpp.o
+.PHONY : DataBase/Metadata.cpp.o
+
+DataBase/Metadata.i: DataBase/Metadata.cpp.i
+
+.PHONY : DataBase/Metadata.i
+
+# target to preprocess a source file
+DataBase/Metadata.cpp.i:
+	$(MAKE) -f CMakeFiles/Main.dir/build.make CMakeFiles/Main.dir/DataBase/Metadata.cpp.i
+.PHONY : DataBase/Metadata.cpp.i
+
+DataBase/Metadata.s: DataBase/Metadata.cpp.s
+
+.PHONY : DataBase/Metadata.s
+
+# target to generate assembly for a file
+DataBase/Metadata.cpp.s:
+	$(MAKE) -f CMakeFiles/Main.dir/build.make CMakeFiles/Main.dir/DataBase/Metadata.cpp.s
+.PHONY : DataBase/Metadata.cpp.s
+
+DataBase/Query.o: DataBase/Query.cpp.o
+
+.PHONY : DataBase/Query.o
+
+# target to build an object file
+DataBase/Query.cpp.o:
+	$(MAKE) -f CMakeFiles/Main.dir/build.make CMakeFiles/Main.dir/DataBase/Query.cpp.o
+.PHONY : DataBase/Query.cpp.o
+
+DataBase/Query.i: DataBase/Query.cpp.i
+
+.PHONY : DataBase/Query.i
+
+# target to preprocess a source file
+DataBase/Query.cpp.i:
+	$(MAKE) -f CMakeFiles/Main.dir/build.make CMakeFiles/Main.dir/DataBase/Query.cpp.i
+.PHONY : DataBase/Query.cpp.i
+
+DataBase/Query.s: DataBase/Query.cpp.s
+
+.PHONY : DataBase/Query.s
+
+# target to generate assembly for a file
+DataBase/Query.cpp.s:
+	$(MAKE) -f CMakeFiles/Main.dir/build.make CMakeFiles/Main.dir/DataBase/Query.cpp.s
+.PHONY : DataBase/Query.cpp.s
+
+DataBase/Userdata.o: DataBase/Userdata.cpp.o
+
+.PHONY : DataBase/Userdata.o
+
+# target to build an object file
+DataBase/Userdata.cpp.o:
+	$(MAKE) -f CMakeFiles/Main.dir/build.make CMakeFiles/Main.dir/DataBase/Userdata.cpp.o
+.PHONY : DataBase/Userdata.cpp.o
+
+DataBase/Userdata.i: DataBase/Userdata.cpp.i
+
+.PHONY : DataBase/Userdata.i
+
+# target to preprocess a source file
+DataBase/Userdata.cpp.i:
+	$(MAKE) -f CMakeFiles/Main.dir/build.make CMakeFiles/Main.dir/DataBase/Userdata.cpp.i
+.PHONY : DataBase/Userdata.cpp.i
+
+DataBase/Userdata.s: DataBase/Userdata.cpp.s
+
+.PHONY : DataBase/Userdata.s
+
+# target to generate assembly for a file
+DataBase/Userdata.cpp.s:
+	$(MAKE) -f CMakeFiles/Main.dir/build.make CMakeFiles/Main.dir/DataBase/Userdata.cpp.s
+.PHONY : DataBase/Userdata.cpp.s
 
 Oddysey_server.o: Oddysey_server.cpp.o
 
@@ -243,6 +324,15 @@ help:
 	@echo "... Chunk.o"
 	@echo "... Chunk.i"
 	@echo "... Chunk.s"
+	@echo "... DataBase/Metadata.o"
+	@echo "... DataBase/Metadata.i"
+	@echo "... DataBase/Metadata.s"
+	@echo "... DataBase/Query.o"
+	@echo "... DataBase/Query.i"
+	@echo "... DataBase/Query.s"
+	@echo "... DataBase/Userdata.o"
+	@echo "... DataBase/Userdata.i"
+	@echo "... DataBase/Userdata.s"
 	@echo "... Oddysey_server.o"
 	@echo "... Oddysey_server.i"
 	@echo "... Oddysey_server.s"

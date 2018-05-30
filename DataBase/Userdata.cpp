@@ -8,8 +8,16 @@
     return username;
 }
 
+std::string Userdata::getNombre()  {
+    return name;
+}
+
 void Userdata::setUsername( std::string username) {
     Userdata::username = username;
+}
+
+void Userdata::setNombre( std::string name) {
+    Userdata::name = name;
 }
 
  std::string Userdata::getPassword()  {

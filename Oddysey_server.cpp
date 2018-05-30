@@ -1,10 +1,10 @@
 #include <fstream>
 #include "Oddysey_server.h"
-#define SIZE 2048*100
-
+#include "DataBase/Userdata.h"
 #include "List.h"
 #include "base64.h"
 #include "pugixml.hpp"
+#include "DataBase/Query.h"
 
 /* Pasos para la ejecucion del servidor:
  * 1. Abrir una terminal
@@ -19,7 +19,7 @@ a-ljsoncpp -std=c++11
 void *manejador_conexion(void *);
 
 class Base64;
-
+Query* consulta= new Query();
 List<string> Chunks();
 long tam();
 pugi::xml_document XML(int codigo);
@@ -112,11 +112,13 @@ void *manejador_conexion(void *socket_desc) {
 
         cout << "Estado" << result.description();
 
-        string cd = doc2.child("comunicacion").child("codigo").text().get();
+        pugi::xml_node nodo= doc2.child("comunicacion");
+
+        string cd = nodo.child("codigo").text().get();
         int codigo = atoi(cd.c_str());
 
 
-        string ch = doc2.child("comunicacion").child("chunk").text().get();
+        string ch = nodo.child("chunk").text().get();
         int chunk = atoi(ch.c_str());
 
         std::stringstream s;
@@ -133,9 +135,30 @@ void *manejador_conexion(void *socket_desc) {
             //cout << "El XML es: \n" << ss.str() << std::endl;
 
             string x = ss.str(); //+ "}";
-
-
             send(sock, x.c_str(), x.size(), 0);
+
+
+        }else if(codigo== 1){
+            Userdata user;
+            user.setPassword(nodo.child("contrasena").text().get());
+            user.setUsername(nodo.child("usuario").text().get());
+            user.setNombre(nodo.child("nombre").text().get());
+            string amigos= nodo.child("amigos").text().get();
+            string favoritos= nodo.child("favoritos").text().get();
+
+            SimpleLinkedList<string> *ListaAmigos= new SimpleLinkedList<string>();
+            SimpleLinkedList<string> *ListaFav = new SimpleLinkedList<string>();
+
+            //ListaAmigos = dividir(amigos);
+            //ListaChunks= dividir(chunks);
+
+            consulta->addNewUser(user);
+        }else if(codigo==2){
+            string usuario = nodo.child("usuario").text().get();
+            if(consulta->Buscar(usuario)){
+
+            }
+
 
 
         } else {
@@ -290,5 +313,11 @@ void *manejador_conexion(void *socket_desc) {
 
         return doc;
     }
+
+
+
+
+
+
 
 
